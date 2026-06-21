@@ -1,0 +1,13 @@
+.DS_Store
+.claude/
+.next/
+node_modules/
+data/jobs/
+*.tsbuildinfo
+*.log
+*.local
+.env
+.env.*
+!.env.example
+LOCAL_SETUP_VALUES.md
+devpost-private/
