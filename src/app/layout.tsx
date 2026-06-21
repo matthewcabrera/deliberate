@@ -5,6 +5,10 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "deliberate",
   description: "Turn debate into an editable, evidence-linked map.",
+  icons: {
+    icon: [{ url: "/brand/deliberate-mark-paper.png", type: "image/png" }],
+    apple: [{ url: "/brand/deliberate-mark-paper.png", type: "image/png" }],
+  },
 };
 
 export default function RootLayout({
