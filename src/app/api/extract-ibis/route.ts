@@ -4,6 +4,7 @@ import { join } from "node:path";
 import { NextResponse, type NextRequest } from "next/server";
 import { extractIbisGraph } from "@/lib/ibis-extract";
 import { evaluateIbis } from "@/lib/ibis-eval";
+import { jobDir } from "@/lib/job-storage";
 import { flushTraces, traced } from "@/lib/trace";
 import type { NormalizedTranscript } from "@/lib/contracts";
 
@@ -31,7 +32,7 @@ export async function POST(req: NextRequest) {
       },
     );
 
-    const dir = join(process.cwd(), "data", "jobs", jobId);
+    const dir = jobDir(jobId);
     await mkdir(dir, { recursive: true });
     await writeFile(join(dir, "graph.json"), JSON.stringify(graph, null, 2));
 

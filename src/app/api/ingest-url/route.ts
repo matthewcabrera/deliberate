@@ -3,6 +3,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { NextResponse, type NextRequest } from "next/server";
 import { captureUrl, pageTextToTranscript } from "@/lib/browserbase";
+import { jobDir } from "@/lib/job-storage";
 import { flushTraces, traced } from "@/lib/trace";
 
 export const runtime = "nodejs";
@@ -17,7 +18,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Provide a valid http(s) URL." }, { status: 400 });
     }
 
-    const dir = join(process.cwd(), "data", "jobs", jobId);
+    const dir = jobDir(jobId);
     await mkdir(dir, { recursive: true });
 
     const page = await traced("browserbase.ingest", { job_id: jobId, "source.url": url }, async (span) => {

@@ -5,6 +5,7 @@ import { join } from "node:path";
 import { promisify } from "node:util";
 import { NextResponse, type NextRequest } from "next/server";
 import { normalizeDeepgram, transcribeWithDeepgram } from "@/lib/deepgram";
+import { jobDir } from "@/lib/job-storage";
 import { flushTraces, traced } from "@/lib/trace";
 import type { SourceRecord } from "@/lib/contracts";
 
@@ -70,7 +71,7 @@ async function ingestUpload(dir: string, jobId: string, file: File): Promise<{ a
 
 export async function POST(req: NextRequest) {
   const jobId = `job_${randomUUID().slice(0, 8)}`;
-  const dir = join(process.cwd(), "data", "jobs", jobId);
+  const dir = jobDir(jobId);
 
   try {
     await mkdir(dir, { recursive: true });
