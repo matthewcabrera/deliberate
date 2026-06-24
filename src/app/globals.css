@@ -1460,18 +1460,33 @@ video.ws-video-frame {
   top: 24px;
   left: 28px;
   z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.crumb-back {
+  display: inline-flex;
+  align-items: center;
   border: 0;
   background: transparent;
   color: var(--ink-55);
   cursor: pointer;
+  padding: 0;
+  transition: color 0.15s, transform 0.15s;
+}
+
+.crumb-back:hover {
+  color: var(--ink);
+  transform: translateX(-2px);
+}
+
+.crumb-label {
+  color: var(--ink-55);
   font-family: var(--font-display), Georgia, serif;
   font-size: 1.1rem;
   letter-spacing: 0.04em;
-  transition: color 0.15s;
-}
-
-.crumb:hover {
-  color: var(--ink);
+  user-select: none;
 }
 
 .menu {

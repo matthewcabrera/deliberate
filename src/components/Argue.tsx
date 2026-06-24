@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
+import { ArrowLeft } from "lucide-react";
 import Workspace from "@/components/Workspace";
 import { buildLiveTranscript } from "@/lib/live-transcript";
 import type { IbisGraph } from "@/lib/contracts";
@@ -126,9 +127,12 @@ export default function Argue({ onExit }: { onExit: () => void }) {
   if (!graph) {
     return (
       <main className="screen">
-        <button type="button" className="crumb" onClick={handleExit}>
-          deliberate
-        </button>
+        <div className="crumb">
+          <button type="button" className="crumb-back" onClick={handleExit} aria-label="Back">
+            <ArrowLeft size={18} aria-hidden="true" />
+          </button>
+          <span className="crumb-label">deliberate</span>
+        </div>
         <div className="stage stage-center">
           <div className="live-listening">
             <p className="label">argue</p>

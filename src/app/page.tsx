@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { ArrowLeft } from "lucide-react";
 import Workspace from "@/components/Workspace";
 import Observe from "@/components/Observe";
 import Argue from "@/components/Argue";
@@ -228,9 +229,12 @@ export default function Home() {
         <InkMark />
 
         {screen !== "menu" && (
-          <button type="button" className="crumb" onClick={toMenu}>
-            deliberate
-          </button>
+          <div className="crumb">
+            <button type="button" className="crumb-back" onClick={toMenu} aria-label="Back">
+              <ArrowLeft size={18} aria-hidden="true" />
+            </button>
+            <span className="crumb-label">deliberate</span>
+          </div>
         )}
 
         {screen === "menu" && (
