@@ -16,14 +16,13 @@ export const demoJob: PipelineJob = {
     sourceType: "youtube",
     title: "Short debate video",
     fetchedAt: "2026-06-20T20:31:00.000Z",
-    browserbaseSessionId: "bb_demo_session",
   },
   steps: [
     {
       id: "source_capture",
       label: "Source capture",
       status: "complete",
-      detail: "Browserbase context and page metadata captured.",
+      detail: "Source context and metadata captured.",
     },
     {
       id: "audio_extract",
@@ -57,7 +56,7 @@ export const demoJob: PipelineJob = {
     },
   ],
   artifacts: [
-    { kind: "source", label: "Browserbase source capture", path: "data/jobs/job_demo_youtube/source.json" },
+    { kind: "source", label: "Source capture", path: "data/jobs/job_demo_youtube/source.json" },
     { kind: "audio", label: "Extracted source audio", path: "data/jobs/job_demo_youtube/audio/source.wav" },
     { kind: "transcript", label: "Normalized Deepgram transcript", path: "data/jobs/job_demo_youtube/transcript.json" },
     { kind: "graph", label: "Validated IBIS graph", path: "data/jobs/job_demo_youtube/graph.json" },

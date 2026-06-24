@@ -4,8 +4,7 @@ import { useEffect, useRef } from "react";
 
 export type MediaSource =
   | { kind: "youtube"; videoId: string }
-  | { kind: "file"; url: string }
-  | { kind: "webpage"; screenshotUrl: string; pageUrl: string; sessionUrl?: string };
+  | { kind: "file"; url: string };
 
 export type SeekFn = (seconds: number) => void;
 
@@ -96,25 +95,6 @@ function FilePlayer({ url, registerSeek }: { url: string; registerSeek: (fn: See
   );
 }
 
-// Captured web page — show the Browserbase screenshot + a link to the recorded
-// session (the evidence/trust layer). No seek.
-function WebPagePanel({ media }: { media: Extract<MediaSource, { kind: "webpage" }> }) {
-  return (
-    <div className="ws-video ws-webpage">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img className="ws-screenshot" src={media.screenshotUrl} alt="Captured source page" />
-      <div className="bb-evidence">
-        <span>captured via Browserbase</span>
-        {media.sessionUrl && (
-          <a href={media.sessionUrl} target="_blank" rel="noreferrer">
-            view session ↗
-          </a>
-        )}
-      </div>
-    </div>
-  );
-}
-
 export default function VideoPanel({
   media,
   registerSeek,
@@ -123,6 +103,5 @@ export default function VideoPanel({
   registerSeek: (fn: SeekFn) => void;
 }) {
   if (media.kind === "youtube") return <YouTubePlayer videoId={media.videoId} registerSeek={registerSeek} />;
-  if (media.kind === "file") return <FilePlayer url={media.url} registerSeek={registerSeek} />;
-  return <WebPagePanel media={media} />;
+  return <FilePlayer url={media.url} registerSeek={registerSeek} />;
 }

@@ -1,4 +1,4 @@
-export type SourceType = "youtube" | "upload" | "transcript" | "webpage" | "unknown";
+export type SourceType = "youtube" | "upload" | "transcript" | "unknown";
 
 export type PipelineStepId =
   | "source_capture"
@@ -34,8 +34,6 @@ export interface SourceRecord {
   sourceType: SourceType;
   title?: string;
   fetchedAt?: string;
-  browserbaseSessionId?: string;
-  screenshotPath?: string;
 }
 
 export interface TranscriptWord {

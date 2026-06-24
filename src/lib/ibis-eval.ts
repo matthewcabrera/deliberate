@@ -1,11 +1,10 @@
 import Anthropic from "@anthropic-ai/sdk";
-import type { Span } from "@opentelemetry/api";
-import { llmAttributes, traced } from "@/lib/trace";
+import { traced, type SpanLike } from "@/lib/trace";
 import type { IbisGraph, NormalizedTranscript } from "@/lib/contracts";
 
-// Arize parses span attributes of the form eval.<Name>.{label,score,explanation}
-// into first-class Evaluations. Name must be alphanumeric (no spaces/hyphens).
-function setEval(span: Span, name: string, label: string, score: number, explanation?: string) {
+// Records the eval result on the span (no-op now that Arize is removed; kept so
+// the eval values still flow through evaluateIbis's return).
+function setEval(span: SpanLike, name: string, label: string, score: number, explanation?: string) {
   span.setAttribute(`eval.${name}.label`, label);
   span.setAttribute(`eval.${name}.score`, score);
   if (explanation) span.setAttribute(`eval.${name}.explanation`, explanation);
@@ -101,7 +100,7 @@ export async function judgeGraph(graph: IbisGraph, transcript: NormalizedTranscr
   const graphText = describeGraph(graph);
   const userPrompt = `TRANSCRIPT:\n${transcriptText}\n\nIBIS MAP:\n${graphText}\n\nEvaluate the map.`;
 
-  return traced("ibis.judge", llmAttributes(JUDGE_MODEL, userPrompt, ""), async (span) => {
+  return traced("ibis.judge", {}, async (span) => {
     const client = new Anthropic();
     const message = await client.messages.create({
       model: JUDGE_MODEL,

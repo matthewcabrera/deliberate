@@ -1,5 +1,8 @@
 # The Shape of Disagreement
 
+> Historical build notes (includes the now-removed Arize and Browserbase stages).
+> For the clean, current summary of the project, read `PROGRESS.md`.
+
 ## Current Direction
 
 The project is now a hackathon-focused Next.js app for turning short video sources into editable, evidence-linked IBIS maps.

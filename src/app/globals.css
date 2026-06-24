@@ -798,38 +798,6 @@ video.ws-video-frame {
   background: #0b0b0a;
 }
 
-.ws-webpage {
-  position: relative;
-}
-
-.ws-screenshot {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: top center;
-  background: #0b0b0a;
-}
-
-.bb-evidence {
-  position: absolute;
-  bottom: 10px;
-  left: 12px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 5px 11px;
-  border-radius: 999px;
-  background: rgba(11, 11, 10, 0.72);
-  color: rgba(243, 239, 229, 0.85);
-  font-size: 0.72rem;
-  letter-spacing: 0.03em;
-}
-
-.bb-evidence a {
-  color: rgba(243, 239, 229, 0.96);
-  text-decoration: underline;
-}
-
 /* ---- Live Deepgram modes (observe / argue) ---- */
 .live-listening {
   display: flex;
@@ -1511,6 +1479,29 @@ video.ws-video-frame {
   flex-direction: column;
   align-items: center;
   gap: 4px;
+}
+
+.hero-line {
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  margin-bottom: 30px;
+  opacity: 0.85;
+}
+
+.example-link {
+  margin-top: 30px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  color: var(--ink-40);
+  transition: color 0.2s ease;
+}
+
+.example-link:hover {
+  color: var(--ink-70);
 }
 
 .menu-item {

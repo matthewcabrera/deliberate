@@ -5,7 +5,7 @@ import Workspace from "@/components/Workspace";
 import Observe from "@/components/Observe";
 import Argue from "@/components/Argue";
 import type { MediaSource } from "@/components/VideoPanel";
-import { demoYoutubeUrl } from "@/lib/demo-data";
+import { demoGraph, demoTranscript, demoYoutubeUrl } from "@/lib/demo-data";
 import type { IbisGraph, NormalizedTranscript, SpeakerProfile } from "@/lib/contracts";
 import deliberateLogo from "../../deliberate logo no bg.png";
 
@@ -14,7 +14,7 @@ function youtubeId(url: string): string | null {
   return m ? m[1] : null;
 }
 
-type Screen = "menu" | "upload" | "processing" | "workspace" | "browse" | "observe" | "argue";
+type Screen = "menu" | "upload" | "processing" | "workspace" | "observe" | "argue";
 type UploadMode = "youtube" | "media" | "transcript";
 
 // YouTube ingestion now works on serverless via the RapidAPI audio path
@@ -24,7 +24,6 @@ type Phase = "transcribing" | "mapping" | "done" | "error";
 
 const menuItems: { key: Screen; word: string }[] = [
   { key: "upload", word: "upload" },
-  { key: "browse", word: "browse" },
   { key: "observe", word: "observe" },
   { key: "argue", word: "argue" },
 ];
@@ -102,7 +101,6 @@ export default function Home() {
 
   const [sourceUrl, setSourceUrl] = useState(demoYoutubeUrl);
   const [pasted, setPasted] = useState("");
-  const [browseUrl, setBrowseUrl] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [phase, setPhase] = useState<Phase>("transcribing");
@@ -184,37 +182,13 @@ export default function Home() {
     }
   }
 
-  async function runBrowse() {
-    const input = browseUrl.trim();
-    if (!input) return;
-    // A URL is captured directly; anything else is treated as a web search.
-    const isUrl = /^https?:\/\//i.test(input) || /^[^\s]+\.[a-z]{2,}(\/\S*)?$/i.test(input);
-    setMedia(null);
-    setScreen("processing");
-    setPhase("transcribing");
+  function runExample() {
     setErrorMsg(null);
-    setGraph(null);
-    setTranscript(null);
-    try {
-      const res = await fetch(isUrl ? "/api/ingest-url" : "/api/browse-search", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(isUrl ? { url: input } : { query: input }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || (isUrl ? "Capture failed." : "Search failed."));
-      const t = data.transcript as NormalizedTranscript;
-      setTranscript(t);
-      setMedia(
-        data.screenshot
-          ? { kind: "webpage", screenshotUrl: data.screenshot as string, pageUrl: input, sessionUrl: data.replayUrl }
-          : null,
-      );
-      await extract(t, data.jobId as string);
-    } catch (err) {
-      setErrorMsg(err instanceof Error ? err.message : "Browse failed.");
-      setPhase("error");
-    }
+    setTranscript(demoTranscript);
+    setGraph(demoGraph);
+    const id = youtubeId(demoYoutubeUrl);
+    setMedia(id ? { kind: "youtube", videoId: id } : null);
+    setScreen("workspace");
   }
 
   function toMenu() {
@@ -261,6 +235,7 @@ export default function Home() {
 
         {screen === "menu" && (
           <div className="stage">
+            <p className="hero-line ink-text">Turn a debate into a map.</p>
             <nav className="menu" aria-label="Main menu">
               {menuItems.map((item) => (
                 <button
@@ -276,6 +251,9 @@ export default function Home() {
                 </button>
               ))}
             </nav>
+            <button type="button" className="example-link" onClick={runExample}>
+              see an example
+            </button>
           </div>
         )}
 
@@ -377,21 +355,6 @@ export default function Home() {
           </div>
         )}
 
-        {screen === "browse" && (
-          <div className="stage">
-            <div className="mode-field">
-              <input
-                className="quiet-input"
-                value={browseUrl}
-                onChange={(e) => setBrowseUrl(e.target.value)}
-                placeholder="search a topic, or paste a URL"
-              />
-              <button type="button" className="primary-action" onClick={runBrowse}>
-                deliberate
-              </button>
-            </div>
-          </div>
-        )}
 
       </main>
     </>

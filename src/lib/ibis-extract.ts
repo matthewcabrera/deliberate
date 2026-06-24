@@ -1,5 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
-import { llmAttributes, traced } from "@/lib/trace";
+import { traced } from "@/lib/trace";
 import type {
   Confidence,
   EdgeType,
@@ -345,7 +345,7 @@ export async function extractIbisGraph(transcript: NormalizedTranscript): Promis
   const client = new Anthropic();
   const userPrompt = buildUserPrompt(transcript);
 
-  return traced("ibis.extract", llmAttributes(MODEL, userPrompt, ""), async (span) => {
+  return traced("ibis.extract", {}, async (span) => {
     const message = await client.messages.create({
       model: MODEL,
       max_tokens: 16000,
