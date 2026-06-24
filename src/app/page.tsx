@@ -21,6 +21,10 @@ type UploadMode = "youtube" | "media" | "transcript";
 // YouTube ingestion now works on serverless via the RapidAPI audio path
 // (with local yt-dlp as a dev fallback), so it's enabled everywhere.
 const YOUTUBE_ENABLED = true;
+
+// Prefilled in the YouTube field. ("see an example" stays on the LBC debate via demoYoutubeUrl.)
+const DEFAULT_YOUTUBE_URL = "https://youtu.be/5rysVKetHYU?si=e7nY1X09muRGlmxu";
+
 type Phase = "transcribing" | "mapping" | "done" | "error";
 
 const menuItems: { key: Screen; word: string }[] = [
@@ -100,7 +104,7 @@ export default function Home() {
   const [screen, setScreen] = useState<Screen>("menu");
   const [uploadMode, setUploadMode] = useState<UploadMode | null>(null);
 
-  const [sourceUrl, setSourceUrl] = useState(demoYoutubeUrl);
+  const [sourceUrl, setSourceUrl] = useState(DEFAULT_YOUTUBE_URL);
   const [pasted, setPasted] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
