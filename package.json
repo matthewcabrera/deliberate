@@ -13,6 +13,7 @@
     "@anthropic-ai/sdk": "^0.105.0",
     "@arizeai/openinference-semantic-conventions": "^2.5.0",
     "@browserbasehq/sdk": "^2.14.1",
+    "@distube/ytdl-core": "^4.16.12",
     "@opentelemetry/api": "^1.9.1",
     "@opentelemetry/exporter-trace-otlp-proto": "^0.219.0",
     "@opentelemetry/resources": "^2.8.0",

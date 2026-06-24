@@ -12,3 +12,4 @@ data/jobs/
 LOCAL_SETUP_VALUES.md
 devpost-private/
 .vercel
+*-player-script.js

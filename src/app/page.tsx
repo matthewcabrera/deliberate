@@ -16,6 +16,10 @@ function youtubeId(url: string): string | null {
 
 type Screen = "menu" | "upload" | "processing" | "workspace" | "browse" | "observe" | "argue";
 type UploadMode = "youtube" | "media" | "transcript";
+
+// YouTube ingestion now works on serverless via the RapidAPI audio path
+// (with local yt-dlp as a dev fallback), so it's enabled everywhere.
+const YOUTUBE_ENABLED = true;
 type Phase = "transcribing" | "mapping" | "done" | "error";
 
 const menuItems: { key: Screen; word: string }[] = [
@@ -181,8 +185,10 @@ export default function Home() {
   }
 
   async function runBrowse() {
-    const url = browseUrl.trim();
-    if (!url) return;
+    const input = browseUrl.trim();
+    if (!input) return;
+    // A URL is captured directly; anything else is treated as a web search.
+    const isUrl = /^https?:\/\//i.test(input) || /^[^\s]+\.[a-z]{2,}(\/\S*)?$/i.test(input);
     setMedia(null);
     setScreen("processing");
     setPhase("transcribing");
@@ -190,23 +196,23 @@ export default function Home() {
     setGraph(null);
     setTranscript(null);
     try {
-      const res = await fetch("/api/ingest-url", {
+      const res = await fetch(isUrl ? "/api/ingest-url" : "/api/browse-search", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url }),
+        body: JSON.stringify(isUrl ? { url: input } : { query: input }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Capture failed.");
+      if (!res.ok) throw new Error(data.error || (isUrl ? "Capture failed." : "Search failed."));
       const t = data.transcript as NormalizedTranscript;
       setTranscript(t);
       setMedia(
         data.screenshot
-          ? { kind: "webpage", screenshotUrl: data.screenshot as string, pageUrl: url, sessionUrl: data.replayUrl }
+          ? { kind: "webpage", screenshotUrl: data.screenshot as string, pageUrl: input, sessionUrl: data.replayUrl }
           : null,
       );
       await extract(t, data.jobId as string);
     } catch (err) {
-      setErrorMsg(err instanceof Error ? err.message : "Capture failed.");
+      setErrorMsg(err instanceof Error ? err.message : "Browse failed.");
       setPhase("error");
     }
   }
@@ -276,9 +282,11 @@ export default function Home() {
         {screen === "upload" && (
           <div className="stage">
             <nav className="menu compact" aria-label="Source type">
-              <button type="button" className="menu-item" onClick={() => setUploadMode("youtube")}>
-                <span className="word ink-text">youtube</span>
-              </button>
+              {YOUTUBE_ENABLED && (
+                <button type="button" className="menu-item" onClick={() => setUploadMode("youtube")}>
+                  <span className="word ink-text">youtube</span>
+                </button>
+              )}
               <button type="button" className="menu-item" onClick={() => setUploadMode("media")}>
                 <span className="word ink-text">mp4 / audio</span>
               </button>
@@ -376,7 +384,7 @@ export default function Home() {
                 className="quiet-input"
                 value={browseUrl}
                 onChange={(e) => setBrowseUrl(e.target.value)}
-                placeholder="paste an article or debate URL"
+                placeholder="search a topic, or paste a URL"
               />
               <button type="button" className="primary-action" onClick={runBrowse}>
                 deliberate

@@ -11,6 +11,7 @@ const nextConfig: NextConfig = {
     "playwright-core",
     "@browserbasehq/sdk",
     "pdf-parse",
+    "@distube/ytdl-core",
   ],
 };
 
